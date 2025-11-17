@@ -26,6 +26,8 @@
 #include "buttons.h"
 #include "snow_tiger.h"
 #include "Josue.h"
+#include "Connor.h"
+#include "Ryan.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,7 +38,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define screenAttached
+#define lineHeight
 
 /* USER CODE END PD */
 
@@ -103,9 +105,7 @@ int main(void)
   MX_GPDMA1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-#ifdef screenAttached
   ILI9341_Init();
-#endif
   HAL_Delay(1000);
   /* USER CODE END 2 */
 
@@ -133,14 +133,16 @@ int main(void)
 
   /* -- Sample board code to switch on leds ---- */
   BSP_LED_On(LED_GREEN);
-#ifdef screenAttached
   ILI9341_FillScreen(WHITE);
-  ILI9341_DrawText("DT05! GO TEAM!",FONT3,10,10,BLACK,WHITE);
+  ILI9341_DrawText("DT05! GO TEAM!",FONT4,10,150,BLACK,WHITE);
   HAL_Delay(2000);
   ILI9341_DrawImage(Josue, SCREEN_VERTICAL_1);
   HAL_Delay(2000);
+  ILI9341_DrawImage(Connor, SCREEN_VERTICAL_1);
+  HAL_Delay(2000);
+  ILI9341_DrawImage(Ryan, SCREEN_VERTICAL_1);
+  HAL_Delay(2000);
   ILI9341_FillScreen(BLACK);
-#endif
   /* USER CODE END BSP */
 
   /* Infinite loop */
@@ -156,11 +158,10 @@ int main(void)
       /* -- Sample board code to toggle leds ---- */
       BSP_LED_Toggle(LED_GREEN);
       /* ..... Perform your action ..... */
-#ifdef screenAttached
       ILI9341_Init();
-      ILI9341_FillScreen(BLACK);
+      ILI9341_FillScreen(WHITE);
 
-      /*
+
       for(int x = 0; x < 12; x++){
     	  int margin = 10;
     	  if( x % 2)
@@ -168,40 +169,31 @@ int main(void)
     	  else
     		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,NAVY);
       }
-      */
-#endif
+      ILI9341_FillScreen(BLACK);
     }
     if (selectPressed == 1)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	selectPressed = 0;
-#ifdef screenAttached
     	ILI9341_DrawText("SELECT           ",FONT3,10,10,WHITE,BLACK);
-#endif
     }
     if (backPressed == 1)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	backPressed = 0;
-#ifdef screenAttached
     	ILI9341_DrawText("BACK             ",FONT3,10,10,WHITE,BLACK);
-#endif
     }
     if (encoderState == CW)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	encoderState = NONE;
-#ifdef screenAttached
     	ILI9341_DrawText("Clockwise        ",FONT3,10,10,WHITE,BLACK);
-#endif
     }
     if (encoderState == CCW)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	encoderState = NONE;
     	ILI9341_DrawText("Counter-Clockwise",FONT3,10,10,WHITE,BLACK);
-#ifdef screenAttached
-#endif
     }
     HAL_Delay(10);
 
