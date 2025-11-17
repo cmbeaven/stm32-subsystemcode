@@ -23,6 +23,9 @@
 /* USER CODE BEGIN Includes */
 #include "ILI9341_STM32_Driver.h"
 #include "ILI9341_GFX.h"
+#include "buttons.h"
+#include "snow_tiger.h"
+#include "Josue.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,6 +35,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define screenAttached
 
 /* USER CODE END PD */
 
@@ -98,8 +103,9 @@ int main(void)
   MX_GPDMA1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
+#ifdef screenAttached
   ILI9341_Init();
+#endif
   HAL_Delay(1000);
   /* USER CODE END 2 */
 
@@ -127,9 +133,14 @@ int main(void)
 
   /* -- Sample board code to switch on leds ---- */
   BSP_LED_On(LED_GREEN);
-
-  ILI9341_FillScreen(RED);
+#ifdef screenAttached
+  ILI9341_FillScreen(WHITE);
   ILI9341_DrawText("DT05! GO TEAM!",FONT3,10,10,BLACK,WHITE);
+  HAL_Delay(2000);
+  ILI9341_DrawImage(Josue, SCREEN_VERTICAL_1);
+  HAL_Delay(2000);
+  ILI9341_FillScreen(BLACK);
+#endif
   /* USER CODE END BSP */
 
   /* Infinite loop */
@@ -145,7 +156,10 @@ int main(void)
       /* -- Sample board code to toggle leds ---- */
       BSP_LED_Toggle(LED_GREEN);
       /* ..... Perform your action ..... */
-      ILI9341_FillScreen(NAVY);
+#ifdef screenAttached
+      ILI9341_Init();
+      ILI9341_FillScreen(BLACK);
+
       /*
       for(int x = 0; x < 12; x++){
     	  int margin = 10;
@@ -155,7 +169,41 @@ int main(void)
     		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,NAVY);
       }
       */
+#endif
     }
+    if (selectPressed == 1)
+    {
+    	BSP_LED_Toggle(LED_GREEN);
+    	selectPressed = 0;
+#ifdef screenAttached
+    	ILI9341_DrawText("SELECT           ",FONT3,10,10,WHITE,BLACK);
+#endif
+    }
+    if (backPressed == 1)
+    {
+    	BSP_LED_Toggle(LED_GREEN);
+    	backPressed = 0;
+#ifdef screenAttached
+    	ILI9341_DrawText("BACK             ",FONT3,10,10,WHITE,BLACK);
+#endif
+    }
+    if (encoderState == CW)
+    {
+    	BSP_LED_Toggle(LED_GREEN);
+    	encoderState = NONE;
+#ifdef screenAttached
+    	ILI9341_DrawText("Clockwise        ",FONT3,10,10,WHITE,BLACK);
+#endif
+    }
+    if (encoderState == CCW)
+    {
+    	BSP_LED_Toggle(LED_GREEN);
+    	encoderState = NONE;
+    	ILI9341_DrawText("Counter-Clockwise",FONT3,10,10,WHITE,BLACK);
+#ifdef screenAttached
+#endif
+    }
+    HAL_Delay(10);
 
     /* USER CODE END WHILE */
 
@@ -316,6 +364,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, LCD_CS_Pin|LCD_DC_Pin|LCD_RST_Pin, GPIO_PIN_RESET);
@@ -326,6 +375,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SELECT_Pin BACK_Pin ENCA_Pin */
+  GPIO_InitStruct.Pin = SELECT_Pin|BACK_Pin|ENCA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : ENCB_Pin */
+  GPIO_InitStruct.Pin = ENCB_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ENCB_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI10_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI11_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI11_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI12_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI12_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

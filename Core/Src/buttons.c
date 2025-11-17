@@ -4,8 +4,11 @@
  *  Created on: Nov 4, 2025
  *      Author: cmb
  */
-
 #include "buttons.h"
+
+volatile unsigned short selectPressed;
+volatile unsigned short backPressed;
+volatile enum encMovement encoderState;
 
 void selectButtonCallback(){
 	selectPressed = 1;
@@ -20,9 +23,9 @@ void backButtonCallback(){
 void ENCACallback(){
 	// check to see if B is already high
 	if(readB)
-		encoderState = CCW;
-	else
 		encoderState = CW;
+	else
+		encoderState = CCW;
 }
 
 // called on rising B transition
@@ -34,3 +37,4 @@ void ENCBCallback(){
 	else
 		encoderState = CCW;
 }
+

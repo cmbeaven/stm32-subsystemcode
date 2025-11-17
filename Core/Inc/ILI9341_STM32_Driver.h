@@ -17,7 +17,7 @@ extern SPI_HandleTypeDef hspi2;
 #define	LCD_RST_PORT			GPIOC
 #define	LCD_RST_PIN				GPIO_PIN_4
 
-#define BURST_MAX_SIZE 			500
+#define BURST_MAX_SIZE 			16
 #define BLACK      				0x0000
 #define NAVY        			0x000F
 #define DARKGREEN   			0x03E0

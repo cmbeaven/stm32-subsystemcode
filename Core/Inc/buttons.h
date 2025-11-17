@@ -10,16 +10,16 @@
 
 #include "stm32h5xx_hal.h"
 
-#define SELECT_BUTTON_PORT 	GPIOA
-#define SELECT_BUTTON_PIN 	GPIO_PIN_0
+#define SELECT_BUTTON_PORT 	GPIOC
+#define SELECT_BUTTON_PIN 	GPIO_PIN_10
 
-#define BACK_BUTTON_PORT 	GPIOA
-#define BACK_BUTTON_PIN		GPIO_PIN_0
+#define BACK_BUTTON_PORT 	GPIOC
+#define BACK_BUTTON_PIN		GPIO_PIN_11
 
-#define ENC_A_PORT			GPIOA
-#define ENC_A_PIN			GPIO_PIN_0
-#define ENC_B_PORT			GPIOA
-#define ENC_B_PIN			GPIO_PIN_0
+#define ENC_A_PORT			GPIOC
+#define ENC_A_PIN			GPIO_PIN_12
+#define ENC_B_PORT			GPIOD
+#define ENC_B_PIN			GPIO_PIN_2
 
 #define readA HAL_GPIO_ReadPin(ENC_A_PORT,ENC_A_PIN)
 #define readB HAL_GPIO_ReadPin(ENC_B_PORT,ENC_B_PIN)
@@ -31,9 +31,9 @@ enum encMovement{
 	CCW		// Counter Clockwise Movement
 };
 
-unsigned short selectPressed = 0;
-unsigned short backPressed = 0;
-enum encMovement encoderState = NONE;
+extern volatile unsigned short selectPressed;
+extern volatile unsigned short backPressed;
+extern volatile enum encMovement encoderState;
 
 
 void selectButtonCallback();

@@ -11,17 +11,18 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	  HAL_GPIO_WritePin(LCD_CS_PORT, LCD_CS_PIN, GPIO_PIN_SET);
   }
 }
-
+// HAL_DMA_GetState(&GPDMA1_Channel2) == HAL_DMA_STATE_BUSY
+// GPDMA1_Channel2
 static void ILI9341_SPI_Tx(uint8_t data)
 {
-	while(!__HAL_SPI_GET_FLAG(HSPI_INSTANCE, SPI_FLAG_TXP)); // Edited From SPI_FLAG_TXE
+	while((GPDMA1_Channel2->CSR & 0x100));//(!__HAL_SPI_GET_FLAG(HSPI_INSTANCE, SPI_FLAG_TXP)); // Edited From SPI_FLAG_TXE
 	HAL_SPI_Transmit_DMA(HSPI_INSTANCE, &data, 1);
 	//HAL_SPI_Transmit(HSPI_INSTANCE, &data, 1, 10);
 }
 
 static void ILI9341_SPI_TxBuffer(uint8_t *buffer, uint16_t len)
 {
-	while(!__HAL_SPI_GET_FLAG(HSPI_INSTANCE, SPI_FLAG_TXP)); // Edited From SPI_FLAG_TXE
+	while((GPDMA1_Channel2->CSR & 0x100));//(!__HAL_SPI_GET_FLAG(HSPI_INSTANCE, SPI_FLAG_TXP)); // Edited From SPI_FLAG_TXE
 	HAL_SPI_Transmit_DMA(HSPI_INSTANCE, buffer, len);
 	//HAL_SPI_Transmit(HSPI_INSTANCE, buffer, len, 10);
 }
