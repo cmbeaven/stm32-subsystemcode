@@ -38,7 +38,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define lineHeight
+#define Font3Height 20
 
 /* USER CODE END PD */
 
@@ -79,7 +79,6 @@ static void MX_SPI2_Init(void);
   */
 int main(void)
 {
-
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -147,6 +146,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint8_t drawn = 0;
+  uint16_t lineHeight = 0;
   while (1)
   {
 
@@ -170,31 +171,44 @@ int main(void)
     		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,NAVY);
       }
       ILI9341_FillScreen(BLACK);
+      lineHeight = 0;
     }
     if (selectPressed == 1)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	selectPressed = 0;
-    	ILI9341_DrawText("SELECT           ",FONT3,10,10,WHITE,BLACK);
+    	ILI9341_DrawText("SELECT           ",FONT3,0,lineHeight,WHITE,BLACK);
+    	drawn = 1;
     }
     if (backPressed == 1)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	backPressed = 0;
-    	ILI9341_DrawText("BACK             ",FONT3,10,10,WHITE,BLACK);
+    	ILI9341_DrawText("BACK             ",FONT3,0,lineHeight,WHITE,BLACK);
+    	drawn = 1;
     }
     if (encoderState == CW)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	encoderState = NONE;
-    	ILI9341_DrawText("Clockwise        ",FONT3,10,10,WHITE,BLACK);
+    	ILI9341_DrawText("Clockwise        ",FONT3,0,lineHeight,WHITE,BLACK);
+    	drawn = 1;
     }
     if (encoderState == CCW)
     {
     	BSP_LED_Toggle(LED_GREEN);
     	encoderState = NONE;
-    	ILI9341_DrawText("Counter-Clockwise",FONT3,10,10,WHITE,BLACK);
+    	ILI9341_DrawText("Counter-Clockwise",FONT3,0,lineHeight,WHITE,BLACK);
+    	drawn = 1;
     }
+
+    if (drawn == 1){
+    	lineHeight += Font3Height;
+    	if (lineHeight > 300)
+    		lineHeight = 0;
+    	drawn = 0;
+    }
+
     HAL_Delay(10);
 
     /* USER CODE END WHILE */
