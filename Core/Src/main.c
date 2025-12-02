@@ -26,8 +26,9 @@
 #include "buttons.h"
 #include "snow_tiger.h"
 #include "Josue.h"
-#include "Connor.h"
+//#include "Connor.h"
 #include "Ryan.h"
+#include "Rachelle.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -137,9 +138,11 @@ int main(void)
   HAL_Delay(2000);
   ILI9341_DrawImage(Josue, SCREEN_VERTICAL_1);
   HAL_Delay(2000);
-  ILI9341_DrawImage(Connor, SCREEN_VERTICAL_1);
-  HAL_Delay(2000);
+  //ILI9341_DrawImage(Connor, SCREEN_VERTICAL_1);
+  //HAL_Delay(2000);
   ILI9341_DrawImage(Ryan, SCREEN_VERTICAL_1);
+  HAL_Delay(2000);
+  ILI9341_DrawImage(Rachelle, SCREEN_VERTICAL_1);
   HAL_Delay(2000);
   ILI9341_FillScreen(BLACK);
   /* USER CODE END BSP */
