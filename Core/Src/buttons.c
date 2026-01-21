@@ -8,7 +8,7 @@
 
 volatile unsigned short selectPressed;
 volatile unsigned short backPressed;
-volatile enum encMovement encoderState;
+volatile encMovement_t encoderState;
 
 void selectButtonCallback(){
 	selectPressed = 1;

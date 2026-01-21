@@ -25,15 +25,15 @@
 #define readB HAL_GPIO_ReadPin(ENC_B_PORT,ENC_B_PIN)
 
 
-enum encMovement{
+typedef enum encMovement{
 	NONE,	// no movement
 	CW,		// Clockwise Movement
 	CCW		// Counter Clockwise Movement
-};
+}encMovement_t;
 
 extern volatile unsigned short selectPressed;
 extern volatile unsigned short backPressed;
-extern volatile enum encMovement encoderState;
+extern volatile encMovement_t encoderState;
 
 
 void selectButtonCallback();
