@@ -24,7 +24,7 @@
 #include "ILI9341_STM32_Driver.h"
 #include "ILI9341_GFX.h"
 #include "buttons.h"
-//#include "UI.h"
+#include "UI.h"
 #include "snow_tiger.h"
 #include "Josue.h"
 //#include "Connor.h"
@@ -136,16 +136,17 @@ int main(void)
   BSP_LED_On(LED_GREEN);
   ILI9341_FillScreen(WHITE);
   ILI9341_DrawText("DT05! GO TEAM!",FONT4,10,150,BLACK,WHITE);
-  HAL_Delay(2000);
-  ILI9341_DrawImage(Josue, SCREEN_VERTICAL_1);
-  HAL_Delay(2000);
+  //HAL_Delay(2000);
+  //ILI9341_DrawImage(Josue, SCREEN_VERTICAL_1);
+  //HAL_Delay(2000);
   //ILI9341_DrawImage(Connor, SCREEN_VERTICAL_1);
   //HAL_Delay(2000);
-  ILI9341_DrawImage(Ryan, SCREEN_VERTICAL_1);
-  HAL_Delay(2000);
-  ILI9341_DrawImage(Rachelle, SCREEN_VERTICAL_1);
-  HAL_Delay(2000);
-  ILI9341_FillScreen(BLACK);
+  //ILI9341_DrawImage(Ryan, SCREEN_VERTICAL_1);
+  //HAL_Delay(2000);
+  //ILI9341_DrawImage(Rachelle, SCREEN_VERTICAL_1);
+  //HAL_Delay(2000);
+  //ILI9341_FillScreen(BLACK);
+  UI_init();
   /* USER CODE END BSP */
 
   /* Infinite loop */
@@ -164,55 +165,72 @@ int main(void)
       BSP_LED_Toggle(LED_GREEN);
       /* ..... Perform your action ..... */
       ILI9341_Init();
-      ILI9341_FillScreen(WHITE);
+//      ILI9341_FillScreen(WHITE);
 
 
-      for(int x = 0; x < 12; x++){
-    	  int margin = 10;
-    	  if( x % 2)
-    		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,CYAN);
-    	  else
-    		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,NAVY);
-      }
-      ILI9341_FillScreen(BLACK);
-      lineHeight = 0;
+//      for(int x = 0; x < 12; x++){
+//    	  int margin = 10;
+//   	  if( x % 2)
+//    		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,CYAN);
+//    	  else
+//    		  ILI9341_DrawRectangle(margin*x,margin*x,240-margin*x*2,320-margin*x*2,NAVY);
+//      }
+//      ILI9341_FillScreen(BLACK);
+//      lineHeight = 0;
+      UI_init();
     }
     if (selectPressed == 1)
     {
+    	selectPressed = 0;
+    	handleSelect();
+    	/*
     	BSP_LED_Toggle(LED_GREEN);
     	selectPressed = 0;
     	ILI9341_DrawText("SELECT           ",FONT3,0,lineHeight,WHITE,BLACK);
     	drawn = 1;
+    	*/
     }
     if (backPressed == 1)
     {
+    	backPressed = 0;
+    	handleBack();
+    	/*
     	BSP_LED_Toggle(LED_GREEN);
     	backPressed = 0;
     	ILI9341_DrawText("BACK             ",FONT3,0,lineHeight,WHITE,BLACK);
     	drawn = 1;
+    	*/
     }
     if (encoderState == CW)
     {
+    	encoderState = NONE;
+    	handleEncoder(0);
+    	/*
     	BSP_LED_Toggle(LED_GREEN);
     	encoderState = NONE;
     	ILI9341_DrawText("Clockwise        ",FONT3,0,lineHeight,WHITE,BLACK);
     	drawn = 1;
+    	*/
     }
-    if (encoderState == CCW)
+    else if (encoderState == CCW)
     {
+    	encoderState = NONE;
+    	handleEncoder(1);
+    	/*
     	BSP_LED_Toggle(LED_GREEN);
     	encoderState = NONE;
     	ILI9341_DrawText("Counter-Clockwise",FONT3,0,lineHeight,WHITE,BLACK);
     	drawn = 1;
+    	*/
     }
-
+    /*
     if (drawn == 1){
     	lineHeight += Font3Height;
     	if (lineHeight > 300)
     		lineHeight = 0;
     	drawn = 0;
     }
-
+    */
     HAL_Delay(10);
 
     /* USER CODE END WHILE */

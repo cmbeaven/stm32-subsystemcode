@@ -65,6 +65,13 @@ enum UISTATE prevState = NONE;
 
 short currentSelection = 0;
 
+void UI_init(){
+	currentSelection = 0;
+	currentState = MAIN;
+	prevState = NONE;
+	drawScreen();
+}
+
 
 void changeState(UISTATE_t nextState){
 	currentSelection = 0;
@@ -148,7 +155,7 @@ void drawScreen(){
 	if(currentState < 0){
 		return;
 	}
-
+    ILI9341_FillScreen(BLACK);
 	switch(currentState){
 		case MAIN:
 		case CONFIG:

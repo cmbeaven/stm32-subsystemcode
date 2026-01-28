@@ -35,6 +35,12 @@ typedef struct menuPage{
 extern UISTATE_t currentState;
 extern UISTATE_t prevState;
 
+
+/**
+ * Initialize UI to known state (main)
+ */
+void UI_init();
+
 /**
  * Handle changing between states
  * input: nextState - state to switch too
