@@ -65,6 +65,12 @@ enum UISTATE prevState = NONE;
 
 short currentSelection = 0;
 
+void drawMenuPage(const menuPage_t*);
+void menuPageHandleSelect(const menuPage_t*);
+void menuPageHandleBack(const menuPage_t*);
+void menuPageHandleEnc(const menuPage_t*, short dir);
+
+
 void UI_init(){
 	currentSelection = 0;
 	currentState = MAIN;
@@ -89,10 +95,16 @@ void handleSelect(){
 
 	switch(currentState){
 		case MAIN:
+			menuPageHandleSelect(&mainPage);
+			break;
 		case CONFIG:
+			menuPageHandleSelect(&configPage);
+			break;
 		case SCHEDULE:
+			menuPageHandleSelect(&schedulePage);
+			break;
 		case DISPENSE:
-			changeState(menus[currentState]->options[currentSelection].next);
+			menuPageHandleSelect(&dispensePage);
 			break;
 		default:
 			break;
@@ -109,10 +121,16 @@ void handleBack(){
 
 	switch(currentState){
 		case MAIN:
+			menuPageHandleBack(&mainPage);
+			break;
 		case CONFIG:
+			menuPageHandleBack(&configPage);
+			break;
 		case SCHEDULE:
+			menuPageHandleBack(&schedulePage);
+			break;
 		case DISPENSE:
-			changeState(menus[currentState]->backState);
+			menuPageHandleBack(&dispensePage);
 			break;
 		default:
 			break;
@@ -127,22 +145,16 @@ void handleEncoder(short dir){
 
 	switch(currentState){
 		case MAIN:
+			menuPageHandleEnc(&mainPage,dir);
+			break;
 		case CONFIG:
+			menuPageHandleEnc(&configPage,dir);
+			break;
 		case SCHEDULE:
+			menuPageHandleEnc(&schedulePage,dir);
+			break;
 		case DISPENSE:
-			// increment or decrement current option
-			if(dir){
-				++currentSelection;
-				if(currentSelection >= menus[currentState]->numOptions){
-					currentSelection = 0;
-				}
-			}
-			else{
-				--currentSelection;
-				if(currentSelection < 0){
-					currentSelection = menus[currentState]->numOptions - 1;
-				}
-			}
+			menuPageHandleEnc(&dispensePage,dir);
 			break;
 		default:
 			break;
@@ -158,16 +170,16 @@ void drawScreen(){
     ILI9341_FillScreen(BLACK);
 	switch(currentState){
 		case MAIN:
+			drawMenuPage(&mainPage);
+			break;
 		case CONFIG:
+			drawMenuPage(&configPage);
+			break;
 		case SCHEDULE:
+			drawMenuPage(&schedulePage);
+			break;
 		case DISPENSE:
-			// display name
-			ILI9341_DrawText(menus[currentState]->name,FONT4,10,5,BLACK,WHITE);
-			// display menu contents
-			for(int i = 0; i < menus[currentState]->numOptions; i++){
-				ILI9341_DrawText(menus[currentState]->options[i].name,FONT3,25,i*font3Height + initialOffset,BLACK,WHITE);
-			}
-			ILI9341_DrawChar('>',FONT3,10,initialOffset,BLACK,WHITE);
+			drawMenuPage(&dispensePage);
 			break;
 		default:
 			break;
@@ -192,3 +204,38 @@ void drawCursor(){
 			break;
 	}
 }
+
+void drawMenuPage(const menuPage_t* this){
+	// display name
+	ILI9341_DrawText(this->name,FONT4,10,5,BLACK,WHITE);
+	// display menu contents
+	for(int i = 0; i < this->numOptions; i++){
+		ILI9341_DrawText(this->options[i].name,FONT3,25,i*font3Height + initialOffset,BLACK,WHITE);
+	}
+	ILI9341_DrawChar('>',FONT3,10,initialOffset,BLACK,WHITE);
+}
+
+void menuPageHandleSelect(const menuPage_t* this){
+	changeState(this->options[currentSelection].next);
+}
+
+void menuPageHandleBack(const menuPage_t* this){
+	changeState(this->backState);
+}
+
+void menuPageHandleEnc(const menuPage_t* this,short dir){
+	// increment or decrement current option
+	if(dir){
+		++currentSelection;
+		if(currentSelection >= this->numOptions){
+			currentSelection = 0;
+		}
+	}
+	else{
+		--currentSelection;
+		if(currentSelection < 0){
+			currentSelection = this->numOptions - 1;
+		}
+	}
+}
+
