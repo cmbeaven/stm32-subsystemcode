@@ -16,7 +16,8 @@ typedef enum UISTATE{
 	MAIN = 0,
 	CONFIG = 1,
 	SCHEDULE = 2,
-	DISPENSE = 3
+	DISPENSE = 3,
+	DOSAGEINFO = 4
 }UISTATE_t;
 
 
@@ -35,6 +36,12 @@ typedef struct menuPage{
 extern UISTATE_t currentState;
 extern UISTATE_t prevState;
 
+typedef struct dosage{
+	char name[8];
+	unsigned short hour;
+	unsigned short minute;
+	unsigned short pillAmounts[4];
+}dosage_t;
 
 /**
  * Initialize UI to known state (main)
@@ -74,5 +81,10 @@ void drawScreen();
  * Redraws Cursor on current menu
  */
 void drawCursor();
+
+/**
+ * Gets an array of dosages programmed
+ */
+dosage_t* getDosages(unsigned short* numDosages);
 
 #endif /* UI_H */
