@@ -199,12 +199,15 @@ void drawScreen(){
 	switch(currentState){
 		case MAIN:
 			drawMenuPage(&mainPage);
+			drawCursor();
 			break;
 		case CONFIG:
 			drawMenuPage(&configPage);
+			drawCursor();
 			break;
 		case SCHEDULE:
 			drawMenuPage(&schedulePage);
+			drawCursor();
 			break;
 		case DISPENSE:
 			ILI9341_DrawText("Dosages",FONT4,10,5,BLACK,WHITE);
@@ -212,7 +215,7 @@ void drawScreen(){
 			for(int i = 0; i < numDosages; i++){
 				ILI9341_DrawText(dosageList[i].name,FONT3,25,i*font3Height + initialOffset,BLACK,WHITE);
 			}
-			ILI9341_DrawChar('>',FONT3,10,initialOffset,BLACK,WHITE);
+			drawCursor();
 			break;
 		case DOSAGEINFO:
 			dosage_t* dose = dosageList + lastSelection;
@@ -230,8 +233,6 @@ void drawScreen(){
 				pillAmount[3] = dose->pillAmounts[i] + '0';
 				ILI9341_DrawText(pillAmount,FONT4,25,(1+i)*font3Height + initialOffset,BLACK,WHITE);
 			}
-
-
 			break;
 		default:
 			break;
@@ -246,11 +247,16 @@ void drawCursor(){
 
 	switch(currentState){
 		case MAIN:
+			drawMenuPageCursor(&mainPage);
+			break;
 		case CONFIG:
+			drawMenuPageCursor(&configPage);
+			break;
 		case SCHEDULE:
+			drawMenuPageCursor(&schedulePage);
+			break;
 		case DISPENSE:
-			ILI9341_DrawFilledRectangleCoord(0,initialOffset,25,menus[currentState]->numOptions*font3Height + initialOffset,BLACK);
-			ILI9341_DrawChar('>',FONT3,10,initialOffset + font3Height * currentSelection,BLACK,WHITE);
+			drawCursorHandler(currentSelection,numDosages);
 			break;
 		default:
 			break;
@@ -264,7 +270,7 @@ void drawMenuPage(const menuPage_t* this){
 	for(int i = 0; i < this->numOptions; i++){
 		ILI9341_DrawText(this->options[i].name,FONT3,25,i*font3Height + initialOffset,BLACK,WHITE);
 	}
-	ILI9341_DrawChar('>',FONT3,10,initialOffset,BLACK,WHITE);
+	//ILI9341_DrawChar('>',FONT3,10,initialOffset,BLACK,WHITE);
 }
 
 void menuPageHandleSelect(const menuPage_t* this){
@@ -289,6 +295,15 @@ void menuPageHandleEnc(const menuPage_t* this,short dir){
 			currentSelection = this->numOptions - 1;
 		}
 	}
+}
+
+void drawCursorHandler(const uint8_t loc, const uint8_t total){
+	ILI9341_DrawFilledRectangleCoord(0,initialOffset,25,total*font3Height + initialOffset,BLACK);
+	ILI9341_DrawChar('>',FONT3,10,initialOffset + font3Height * loc,BLACK,WHITE);
+}
+
+void drawMenuPageCursor(const menuPage_t* this){
+	drawCursorHandler(currentSelection, this->numOptions);
 }
 
 dosage_t* getDosages(unsigned short* num){

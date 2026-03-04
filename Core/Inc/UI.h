@@ -83,6 +83,16 @@ void drawScreen();
 void drawCursor();
 
 /**
+ * Helper function to draw a cursor
+ */
+void drawCursorHandler(const uint8_t loc, const uint8_t total);
+
+/**
+ * Handles draws for standardized menu page
+ */
+void drawMenuPageCursor(const menuPage_t* this);
+
+/**
  * Gets an array of dosages programmed
  */
 dosage_t* getDosages(unsigned short* numDosages);
